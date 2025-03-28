@@ -22,17 +22,20 @@ const RightPanelContent = React.memo(() => {
     setBackgroundColor,
   } = useEditorStore();
 
-  const regenerate = async () => {
-    const promises = Array.from({ length: 6 }, () => generateRandomPattern(patternMode));
-    const patterns = await Promise.all(promises);
+  const regenerate = React.useCallback(async () => {
+    const patterns: Pattern[] = [];
+    for (let i = 0; i < 6; i++) {
+      const pattern = await generateRandomPattern(patternMode);
+      patterns.push(pattern);
+    }
     setPatternSet(patterns);
-  };
+  }, [patternMode]);
 
   React.useEffect(() => {
     if (activeTab === 'patterns') {
       regenerate();
     }
-  }, [activeTab, patternMode]);
+  }, [activeTab, patternMode, regenerate]);
 
   const handleRandomGradient = () => {
     const values = Object.values(GRADIENTS);
