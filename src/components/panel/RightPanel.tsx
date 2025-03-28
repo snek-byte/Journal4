@@ -15,6 +15,7 @@ const RightPanelContent = React.memo(() => {
   const [activeTab, setActiveTab] = React.useState<Tab>('backgrounds');
   const [patternMode, setPatternMode] = React.useState<PatternMode>('triangles');
   const [patternSet, setPatternSet] = React.useState<Pattern[]>([]);
+  const [loadingPatterns, setLoadingPatterns] = React.useState(false);
 
   const {
     backgroundColor,
@@ -22,9 +23,13 @@ const RightPanelContent = React.memo(() => {
     setBackgroundColor,
   } = useEditorStore();
 
-  const regenerate = () => {
-    const patterns = Array.from({ length: 6 }, () => generateRandomPattern(patternMode));
+  const regenerate = async () => {
+    setLoadingPatterns(true);
+    const patterns = await Promise.all(
+      Array.from({ length: 6 }, () => generateRandomPattern(patternMode))
+    );
     setPatternSet(patterns);
+    setLoadingPatterns(false);
   };
 
   React.useEffect(() => {
@@ -84,8 +89,10 @@ const RightPanelContent = React.memo(() => {
       <button
         onClick={regenerate}
         className="glass-button px-4 py-1 text-sm flex items-center gap-2"
+        disabled={loadingPatterns}
       >
-        <RotateCw size={16} /> Regenerate Patterns
+        <RotateCw size={16} className={loadingPatterns ? 'animate-spin' : ''} />
+        {loadingPatterns ? 'Generating...' : 'Regenerate Patterns'}
       </button>
 
       {patternSet.map(({ thumbnail, full }, i) => (
