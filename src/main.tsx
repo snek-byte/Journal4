@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 
-// Import Google Fonts
+// Fonts
 import '@fontsource/inter';
 import '@fontsource/playfair-display';
 import '@fontsource/montserrat';

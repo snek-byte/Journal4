@@ -13,25 +13,30 @@ export function generateRandomPattern(mode: PatternMode = 'triangles') {
 
   try {
     if (mode === 'triangles') {
-      const thumbnail = trianglify({
+      const thumbnailCanvas = trianglify({
         width: 160,
         height: 60,
         seed,
-      }).toCanvas().toDataURL();
+      }).toCanvas();
 
-      const full = trianglify({
+      const fullCanvas = trianglify({
         width: 1240,
         height: 1748,
         seed,
-      }).toCanvas().toDataURL();
+      }).toCanvas();
 
-      return { thumbnail, full };
+      return {
+        thumbnail: thumbnailCanvas.toDataURL(),
+        full: fullCanvas.toDataURL(),
+      };
     }
 
     if (mode === 'doodles') {
       const url = doodleSVGs[Math.floor(Math.random() * doodleSVGs.length)];
       return { thumbnail: url, full: url };
     }
+
+    // Add more pattern modes here in the future
   } catch (err) {
     console.error('Pattern generation failed:', err);
   }

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { GRADIENTS } from '../../config/constants';
 import { ChevronRight, ChevronLeft, RotateCw } from 'lucide-react';
@@ -23,15 +22,16 @@ const RightPanelContent = React.memo(() => {
     setBackgroundColor,
   } = useEditorStore();
 
+  const regenerate = () => {
+    const patterns = Array.from({ length: 6 }, () => generateRandomPattern(patternMode));
+    setPatternSet(patterns);
+  };
+
   React.useEffect(() => {
     if (activeTab === 'patterns') {
-      setPatternSet(Array.from({ length: 6 }, () => generateRandomPattern(patternMode)));
+      regenerate();
     }
   }, [activeTab, patternMode]);
-
-  const regenerate = () => {
-    setPatternSet(Array.from({ length: 6 }, () => generateRandomPattern(patternMode)));
-  };
 
   const handleRandomGradient = () => {
     const values = Object.values(GRADIENTS);
