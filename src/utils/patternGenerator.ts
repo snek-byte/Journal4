@@ -1,46 +1,22 @@
-import trianglify from 'trianglify';
+export type PatternMode = 'dots' | 'waves' | 'grids';
 
-export type PatternMode = 'triangles' | 'doodles';
+const svgPatterns: Record<PatternMode, string[]> = {
+  dots: [
+    'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="60"><rect width="100%" height="100%" fill="white"/><circle cx="10" cy="10" r="2" fill="gray" /></svg>'
+  ],
+  waves: [
+    'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="60"><rect width="100%" height="100%" fill="white"/><path d="M0,30 Q40,0 80,30 T160,30" stroke="gray" fill="none" stroke-width="2" /></svg>'
+  ],
+  grids: [
+    'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="60"><rect width="100%" height="100%" fill="white"/><path d="M0 10 H160 M0 20 H160 M0 30 H160 M0 40 H160 M0 50 H160 M10 0 V60 M20 0 V60 M30 0 V60 M40 0 V60 M50 0 V60" stroke="lightgray" stroke-width="1"/></svg>'
+  ]
+};
 
-const doodleSVGs: string[] = [
-  'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="60"><rect width="100%" height="100%" fill="#fafafa"/><circle cx="80" cy="30" r="25" fill="none" stroke="#222" stroke-width="2"/></svg>',
-  'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="60"><rect width="100%" height="100%" fill="#fffbe6"/><path d="M0,30 Q80,0 160,30 Q80,60 0,30 Z" fill="none" stroke="#000" stroke-width="2"/></svg>',
-  'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="60"><rect width="100%" height="100%" fill="#f0f0f0"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="18" fill="#333">★</text></svg>',
-];
-
-export async function generateRandomPattern(mode: PatternMode = 'triangles') {
-  const seed = Math.random().toString();
-
+export async function generateRandomPattern(mode: PatternMode = 'dots') {
   try {
-    if (mode === 'triangles') {
-      console.log(`[Trianglify] Generating with seed: ${seed}`);
-
-      const thumbPattern = trianglify({
-        width: 160,
-        height: 60,
-        seed,
-      });
-
-      const fullPattern = trianglify({
-        width: 1240,
-        height: 1748,
-        seed,
-      });
-
-      const thumbCanvas = await thumbPattern.toCanvas();
-      const fullCanvas = await fullPattern.toCanvas();
-
-      const thumbnail = thumbCanvas.toDataURL();
-      const full = fullCanvas.toDataURL();
-
-      console.log('[Trianglify] Pattern generated successfully');
-      return { thumbnail, full };
-    }
-
-    if (mode === 'doodles') {
-      const url = doodleSVGs[Math.floor(Math.random() * doodleSVGs.length)];
-      return { thumbnail: url, full: url };
-    }
+    const patterns = svgPatterns[mode];
+    const url = patterns[Math.floor(Math.random() * patterns.length)];
+    return { thumbnail: url, full: url };
   } catch (err) {
     console.error('[PatternGenerator] Pattern generation failed:', err);
   }
@@ -50,6 +26,6 @@ export async function generateRandomPattern(mode: PatternMode = 'triangles') {
     thumbnail:
       'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="60" fill="#ccc"/>',
     full:
-      'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="1748" fill="#eee"/>',
+      'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="1748" fill="#eee"/>'
   };
 }
